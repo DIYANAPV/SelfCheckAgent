@@ -1,8 +1,6 @@
-from .Semantic_model import (
-    SemanticLanguageModel,
-    SemanticUnigramModel,
-    SemanticNgramModel,
-    semantic_model_predict,
-)
+# SemanticNgram/__init__.py
 
-__version__ = "0.1.0"
+# Importing the main classes from Semantic_model.py to make them available at the package level.
+from .Semantic_model import SemanticLanguageModel, SemanticUnigramModel, SemanticNgramModel
+
+# You can add more imports here if you have other modules or components in this package
