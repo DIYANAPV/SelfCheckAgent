@@ -1,4 +1,7 @@
-from SemanticNgram.download_word2vec import download_word2vec
+# SemanticNgram/download_word2vec/__init__.py
 
-# Now you can use the function
-download_word2vec(destination_folder="your_model_folder")
+# Just import the download_word2vec function, don't call it here
+from .download_word2vec import download_word2vec
+
+
+
