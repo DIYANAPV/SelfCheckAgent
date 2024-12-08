@@ -1,4 +1,13 @@
 from setuptools import setup, find_packages
+from setuptools.command.install import install
+import subprocess
+
+class PostInstallCommand(install):
+    """Post-installation for installing the Spacy model."""
+    def run(self):
+        install.run(self)
+        subprocess.call(['python', '-m', 'spacy', 'download', 'en_core_web_sm'])
+
 
 setup(
     name="Semantic_Ngram",  # Name of your package
@@ -30,5 +39,8 @@ setup(
         'console_scripts': [
             'semantic-ngram=SemanticNgram.main:main',  # Example command (adjust based on your entry point)
         ],
+    },
+    cmdclass={
+        'install': PostInstallCommand,
     },
 )
