@@ -1,0 +1,6 @@
+spacy
+gensim
+nltk
+scipy
+tqdm
+requests
