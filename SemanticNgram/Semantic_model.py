@@ -158,7 +158,7 @@ def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) ->
     # Using the formula: normalized_score = e^(-avg_neg_logprob), where high probabilities lead to scores close to 1
     #normalized_score = np.exp(-avg_neg_logprob)  # Transform into a coherence score
     # Inverse log scaling
-    normalized_score = 1 / (1 + avg_neg_logprob)
+    #normalized_score = 1 / (1 + avg_neg_logprob)
 
 
     # Optionally include avg_max_neg_logprob in a weighted average for a composite score
