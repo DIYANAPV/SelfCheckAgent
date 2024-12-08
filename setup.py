@@ -8,7 +8,7 @@ setup(
     description="A package for semantic n-gram models with Word2Vec",  # Short description of the package
     long_description=open('README.md').read(),  # Detailed description (from README.md)
     long_description_content_type='text/markdown',  # Markdown format for README
-    url="https://github.com/yourusername/Semantic_Ngram",  # URL to your GitHub repository
+    url=https://github.com/DIYANAPV/Semantic_Ngram.git,  # URL to your GitHub repository
     packages=find_packages(),  # This will automatically find all sub-packages
     install_requires=[
         'spacy',
