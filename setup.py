@@ -10,7 +10,7 @@ setup(
     long_description_content_type='text/markdown',  # Markdown format for README
     url="https://github.com/yourusername/Semantic_Ngram",  # URL to your GitHub repository
     packages=find_packages(),  # This will automatically find all sub-packages
-    install_requires=[  # List of dependencies your package needs
+    install_requires=[
         'spacy',
         'gensim',
         'nltk',
@@ -18,6 +18,7 @@ setup(
         'tqdm',
         'requests'
     ],
+
     python_requires='>=3.6',  # Minimum Python version required
     classifiers=[
         "Programming Language :: Python :: 3",
