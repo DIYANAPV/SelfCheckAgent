@@ -1,11 +1,9 @@
-import os
 import spacy
 import numpy as np
 from nltk.util import ngrams
 from typing import Dict, List, Set, Tuple, Union
 from scipy.spatial.distance import cosine
-from gensim.models import KeyedVectors
-from .download_word2vec.download_word2vec import download_word2vec
+import gensim.downloader as api  # Use Gensim's downloader
 
 class SemanticLanguageModel:
     def __init__(self, lowercase: bool = True, similarity_threshold: float = 0.9) -> None:
@@ -15,9 +13,9 @@ class SemanticLanguageModel:
         self.lowercase = lowercase
         self.similarity_threshold = similarity_threshold
 
-        # Automatically download and load the Word2Vec model
-        word2vec_path = download_word2vec(destination_folder="model")  # Downloads if not already present
-        self.word2vec = KeyedVectors.load_word2vec_format(word2vec_path, binary=True)
+        # Automatically download and load the Word2Vec model using Gensim's API
+        print("Downloading Word2Vec model via Gensim...")
+        self.word2vec = api.load("word2vec-google-news-300")  # Download pre-trained Word2Vec
         print("Word2Vec model loaded successfully.")
         self.token_vectors = {}
 
@@ -28,8 +26,8 @@ class SemanticLanguageModel:
             else:
                 self.token_vectors[token] = np.zeros(300)  # Default to zero vector
         return self.token_vectors[token]
-
-
+    
+    # (Keep all other methods as is)
 
     def _are_similar(self, token1: str, token2: str) -> bool:
         vec1 = self._get_vector(token1)
