@@ -124,17 +124,43 @@ class SemanticNgramModel(SemanticLanguageModel):
                 similar_ngs.add(similar_ng)
         return similar_ngs
 
+def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> float:
+    """
+    Predicts a single normalized score (0 to 1) for a given passage compared to sampled passages.
 
-def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> Dict[str, Dict[str, Union[List[float], float]]]:
+    :param passage: The main passage to evaluate.
+    :param sampled_passages: A list of sampled passages to build the semantic model.
+    :param n: The n-gram size for the model (1 for unigram, >1 for n-gram).
+    :return: A normalized score between 0 and 1 representing passage-level semantic coherence.
+    """
+    # Initialize the appropriate semantic model
     if n == 1:
         model = SemanticUnigramModel()
     else:
         model = SemanticNgramModel(n=n)
 
+    # Add sampled passages and the main passage to the model
     for sample in sampled_passages + [passage]:
         model.add(sample)
 
+    # Train the model
     model.train()
+
+    # Evaluate the main passage
     sentences = [sent.text.strip() for sent in model.nlp(passage).sents]
-    results = model.evaluate(sentences)
-    return results
+    evaluation_results = model.evaluate(sentences)
+
+    # Extract document-level metrics
+    avg_neg_logprob = evaluation_results['doc_level']['avg_neg_logprob']  # Mean of log probabilities
+    avg_max_neg_logprob = evaluation_results['doc_level']['avg_max_neg_logprob']  # Mean of max log probabilities
+
+    # Normalize the scores to the range [0, 1]
+    # Using the formula: normalized_score = e^(-avg_neg_logprob), where high probabilities lead to scores close to 1
+    normalized_score = np.exp(-avg_neg_logprob)  # Transform into a coherence score
+
+    # Optionally include avg_max_neg_logprob in a weighted average for a composite score
+    # normalized_score = (normalized_score + np.exp(-avg_max_neg_logprob)) / 2
+
+    return normalized_score
+
+
