@@ -166,6 +166,38 @@ class SemanticNgramModel(SemanticLanguageModel):
                 similar_ngs.add(similar_ng)
         return similar_ngs
 
+def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> float:
+    if n == 1:
+        model = SemanticUnigramModel()
+    else:
+        model = SemanticNgramModel(n=n)
+
+    for sample in sampled_passages + [passage]:
+        model.add(sample)
+
+    model.train()
+    sentences = [sent.text.strip() for sent in model.nlp(passage).sents]
+    results = model.evaluate(sentences)
+
+    # Get sentence-level min and max values for normalization
+    all_avg_neg_logprobs = results['sent_level']['avg_neg_logprob']
+
+    neg_logprob_min = min(all_avg_neg_logprobs)
+    neg_logprob_max = max(all_avg_neg_logprobs)
+
+    def normalize(value):
+        return (value - neg_logprob_min) / (neg_logprob_max - neg_logprob_min)
+
+    # Normalize sentence-level scores
+    normalized_avg_scores = [normalize(score) for score in all_avg_neg_logprobs]
+
+    # Compute document-level average hallucination score
+    doc_avg_hallucination_score = sum(normalized_avg_scores) / len(normalized_avg_scores)
+
+    return doc_avg_hallucination_score
+
+
+
 """def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> Dict[str, Dict[str, Union[List[float], float]]]:
     if n == 1:
         model = SemanticUnigramModel()
@@ -178,7 +210,7 @@ class SemanticNgramModel(SemanticLanguageModel):
     model.train()
     sentences = [sent.text.strip() for sent in model.nlp(passage).sents]
     results = model.evaluate(sentences)
-    return results"""
+    return results
 
 def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> Dict[str, Dict[str, Union[List[float], float]]]:
     if n == 1:
@@ -233,4 +265,4 @@ def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) ->
         'original_results': results,
         'hallucination_scores': hallucination_scores
     }
-
+"""
