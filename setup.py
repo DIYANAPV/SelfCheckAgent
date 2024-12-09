@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+'''from setuptools import setup, find_packages
 from setuptools.command.install import install
 import subprocess
 
@@ -6,7 +6,41 @@ class PostInstallCommand(install):
     """Post-installation for installing the Spacy model."""
     def run(self):
         install.run(self)
-        subprocess.call(['python', '-m', 'spacy', 'download', 'en_core_web_sm'])
+        subprocess.call(['python', '-m', 'spacy', 'download', 'en_core_web_sm'])'''
+
+from setuptools import setup, find_packages
+from setuptools.command.install import install
+import os
+import subprocess
+
+class PostInstallCommand(install):
+    """Post-installation command to download required resources."""
+    def run(self):
+        install.run(self)
+        print("Running post-install script to download resources...")
+        subprocess.call(["python", "download_resources.py"])
+
+setup(
+    name="my_package",
+    version="0.1",
+    packages=find_packages(),
+    include_package_data=True,
+    install_requires=[
+        "spacy",
+        "numpy",
+        "nltk",
+        "scipy",
+        "gensim",
+    ],
+    cmdclass={
+        'install': PostInstallCommand,
+    },
+    entry_points={
+        "console_scripts": [
+            "download-resources=my_package.download_resources:download_word2vec",
+        ]
+    },
+)
 
 
 setup(
@@ -37,7 +71,8 @@ setup(
     include_package_data=True,  # Includes non-Python files specified in MANIFEST.in (if any)
     entry_points={  # If you have CLI commands, define them here
         'console_scripts': [
-            'semantic-ngram=SemanticNgram.main:main',  # Example command (adjust based on your entry point)
+            "download-resources=my_package.download_resources:download_word2vec",
+            #'semantic-ngram=SemanticNgram.main:main',  # Example command (adjust based on your entry point)
         ],
     },
     cmdclass={
