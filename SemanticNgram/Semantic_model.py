@@ -5,7 +5,10 @@ from typing import Dict, List, Set, Tuple, Union
 from scipy.spatial.distance import cosine
 import gensim.downloader as api  # Use Gensim's downloader
 
+
 class SemanticLanguageModel:
+    word2vec = None  # Class-level attribute
+
     def __init__(self, lowercase: bool = True, similarity_threshold: float = 0.9) -> None:
         self.nlp = spacy.load("en_core_web_sm")
         self.token_count = 0
@@ -13,10 +16,12 @@ class SemanticLanguageModel:
         self.lowercase = lowercase
         self.similarity_threshold = similarity_threshold
 
-        # Automatically download and load the Word2Vec model using Gensim's API
-        print("Downloading Word2Vec model via Gensim...")
-        self.word2vec = api.load("word2vec-google-news-300")  # Download pre-trained Word2Vec
-        print("Word2Vec model loaded successfully.")
+        # Load the Word2Vec model only if it's not already loaded
+        if SemanticLanguageModel.word2vec is None:
+            print("Downloading Word2Vec model via Gensim...")
+            SemanticLanguageModel.word2vec = api.load("word2vec-google-news-300")
+            print("Word2Vec model loaded successfully.")
+        self.word2vec = SemanticLanguageModel.word2vec
         self.token_vectors = {}
 
     def _get_vector(self, token: str) -> np.ndarray:
@@ -26,8 +31,8 @@ class SemanticLanguageModel:
             else:
                 self.token_vectors[token] = np.zeros(300)  # Default to zero vector
         return self.token_vectors[token]
-    
-    # (Keep all other methods as is)
+
+
 
     def _are_similar(self, token1: str, token2: str) -> bool:
         vec1 = self._get_vector(token1)
