@@ -20,27 +20,6 @@ class PostInstallCommand(install):
         print("Running post-install script to download resources...")
         subprocess.call(["python", "download_resources.py"])
 
-setup(
-    name="my_package",
-    version="0.1",
-    packages=find_packages(),
-    include_package_data=True,
-    install_requires=[
-        "spacy",
-        "numpy",
-        "nltk",
-        "scipy",
-        "gensim",
-    ],
-    cmdclass={
-        'install': PostInstallCommand,
-    },
-    entry_points={
-        "console_scripts": [
-            "download-resources=my_package.download_resources:download_word2vec",
-        ]
-    },
-)
 
 
 setup(
