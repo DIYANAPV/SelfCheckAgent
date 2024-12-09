@@ -74,6 +74,48 @@ class SemanticLanguageModel:
             'sent_level': {'avg_neg_logprob': avg_neg_logprob, 'max_neg_logprob': max_neg_logprob},
             'doc_level': {'avg_neg_logprob': avg_neg_logprob_doc, 'avg_max_neg_logprob': avg_max_neg_logprob_doc},
         }
+    def evaluate(self, sentences: List[str]) -> Dict[str, Dict[str, Union[List[float], float]]]:
+        avg_neg_logprob = []
+        max_neg_logprob = []
+        min_neg_logprob = []  # Add this for minimum negative log probabilities
+        logprob_doc = []
+    
+        for sentence in sentences:
+            logprob_sent = []
+            tokens = [token.text for token in self.nlp(sentence)]
+            if self.lowercase:
+                tokens = [token.lower() for token in tokens]
+            for token in tokens:
+                similar_tokens = self._get_similar_tokens(token)
+                prob = sum(self.probs.get(similar_token, 0) for similar_token in similar_tokens)
+                if prob == 0:
+                    prob = self.probs['<unk>']
+                logprob = np.log(prob)
+                logprob_sent.append(logprob)
+                logprob_doc.append(logprob)
+        
+            # Add calculations for min and max negative log probabilities at sentence level
+            avg_neg_logprob.append(-1.0 * np.mean(logprob_sent))
+            max_neg_logprob.append(-1.0 * np.min(logprob_sent))
+            min_neg_logprob.append(-1.0 * np.max(logprob_sent))  # Opposite of max for log probabilities
+
+        avg_neg_logprob_doc = -1.0 * np.mean(logprob_doc)
+        avg_max_neg_logprob_doc = np.mean(max_neg_logprob)
+        avg_min_neg_logprob_doc = np.mean(min_neg_logprob)  # Document-level minimum negative log probability
+
+        return {
+            'sent_level': {
+                'avg_neg_logprob': avg_neg_logprob,
+                'max_neg_logprob': max_neg_logprob,
+                'min_neg_logprob': min_neg_logprob,  # Include in results
+            },
+            'doc_level': {
+                'avg_neg_logprob': avg_neg_logprob_doc,
+                'avg_max_neg_logprob': avg_max_neg_logprob_doc,
+                'avg_min_neg_logprob': avg_min_neg_logprob_doc,  # Include in results
+            },
+        }
+
 
 
 class SemanticUnigramModel(SemanticLanguageModel):
@@ -124,6 +166,20 @@ class SemanticNgramModel(SemanticLanguageModel):
                 similar_ngs.add(similar_ng)
         return similar_ngs
 
+"""def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> Dict[str, Dict[str, Union[List[float], float]]]:
+    if n == 1:
+        model = SemanticUnigramModel()
+    else:
+        model = SemanticNgramModel(n=n)
+
+    for sample in sampled_passages + [passage]:
+        model.add(sample)
+
+    model.train()
+    sentences = [sent.text.strip() for sent in model.nlp(passage).sents]
+    results = model.evaluate(sentences)
+    return results"""
+
 def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> Dict[str, Dict[str, Union[List[float], float]]]:
     if n == 1:
         model = SemanticUnigramModel()
@@ -136,48 +192,45 @@ def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) ->
     model.train()
     sentences = [sent.text.strip() for sent in model.nlp(passage).sents]
     results = model.evaluate(sentences)
-    return results
 
-'''def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> float:
-    """
-    Predicts a single normalized score (0 to 1) for a given passage compared to sampled passages.
+    # Get sentence-level min and max values for normalization
+    all_avg_neg_logprobs = results['sent_level']['avg_neg_logprob']
+    all_max_neg_logprobs = results['sent_level']['max_neg_logprob']
+    all_min_neg_logprobs = results['sent_level']['min_neg_logprob']
 
-    :param passage: The main passage to evaluate.
-    :param sampled_passages: A list of sampled passages to build the semantic model.
-    :param n: The n-gram size for the model (1 for unigram, >1 for n-gram).
-    :return: A normalized score between 0 and 1 representing passage-level semantic coherence.
-    """
-    # Initialize the appropriate semantic model
-    if n == 1:
-        model = SemanticUnigramModel()
-    else:
-        model = SemanticNgramModel(n=n)
+    neg_logprob_min = min(all_min_neg_logprobs)
+    neg_logprob_max = max(all_max_neg_logprobs)
 
-    # Add sampled passages and the main passage to the model
-    for sample in sampled_passages + [passage]:
-        model.add(sample)
+    def normalize(value):
+        return (value - neg_logprob_min) / (neg_logprob_max - neg_logprob_min)
 
-    # Train the model
-    model.train()
+    # Normalize sentence-level scores
+    normalized_avg_scores = [normalize(score) for score in all_avg_neg_logprobs]
+    normalized_max_scores = [normalize(score) for score in all_max_neg_logprobs]
+    normalized_min_scores = [normalize(score) for score in all_min_neg_logprobs]
 
-    # Evaluate the main passage
-    sentences = [sent.text.strip() for sent in model.nlp(passage).sents]
-    evaluation_results = model.evaluate(sentences)
+    # Compute document-level scores by averaging sentence-level normalized scores
+    doc_avg_hallucination_score = sum(normalized_avg_scores) / len(normalized_avg_scores)
+    doc_max_hallucination_score = sum(normalized_max_scores) / len(normalized_max_scores)
+    doc_min_hallucination_score = sum(normalized_min_scores) / len(normalized_min_scores)
 
-    # Extract document-level metrics
-    avg_neg_logprob = evaluation_results['doc_level']['avg_neg_logprob']  # Mean of log probabilities
-    avg_max_neg_logprob = evaluation_results['doc_level']['avg_max_neg_logprob']  # Mean of max log probabilities
+    # Add hallucination scores to the result
+    hallucination_scores = {
+        'sent_level': {
+            'avg_hallucination_score': normalized_avg_scores,
+            'max_hallucination_score': normalized_max_scores,
+            'min_hallucination_score': normalized_min_scores,
+        },
+        'doc_level': {
+            'avg_hallucination_score': doc_avg_hallucination_score,
+            'max_hallucination_score': doc_max_hallucination_score,
+            'min_hallucination_score': doc_min_hallucination_score,
+        }
+    }
 
-    # Normalize the scores to the range [0, 1]
-    # Using the formula: normalized_score = e^(-avg_neg_logprob), where high probabilities lead to scores close to 1
-    #normalized_score = np.exp(-avg_neg_logprob)  # Transform into a coherence score
-    # Inverse log scaling
-    #normalized_score = 1 / (1 + avg_neg_logprob)
-
-
-    # Optionally include avg_max_neg_logprob in a weighted average for a composite score
-    # normalized_score = (normalized_score + np.exp(-avg_max_neg_logprob)) / 2
-
-    return normalized_score'''
-
+    # Combine original results with hallucination scores
+    return {
+        'original_results': results,
+        'hallucination_scores': hallucination_scores
+    }
 
