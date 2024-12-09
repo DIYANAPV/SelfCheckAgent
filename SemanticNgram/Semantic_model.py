@@ -171,7 +171,7 @@ class SemanticNgramModel(SemanticLanguageModel):
                 similar_ngs.add(similar_ng)
         return similar_ngs
 
-"""def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> float:
+def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> float:
     if n == 1:
         model = SemanticUnigramModel()
     else:
@@ -202,11 +202,11 @@ class SemanticNgramModel(SemanticLanguageModel):
     doc_avg_hallucination_score = sum(normalized_avg_scores) / len(normalized_avg_scores)
 
     # Return only the document-level average hallucination score
-    return doc_avg_hallucination_score"""
+    return doc_avg_hallucination_score
 
 
 
-def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> Dict[str, Dict[str, Union[List[float], float]]]:
+"""def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> Dict[str, Dict[str, Union[List[float], float]]]:
     if n == 1:
         model = SemanticUnigramModel()
     else:
@@ -220,7 +220,7 @@ def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) ->
     results = model.evaluate(sentences)
     return results
 
-"""def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> Dict[str, Dict[str, Union[List[float], float]]]:
+def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> Dict[str, Dict[str, Union[List[float], float]]]:
     if n == 1:
         model = SemanticUnigramModel()
     else:
