@@ -181,9 +181,11 @@ def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) ->
 
     # Get sentence-level min and max values for normalization
     all_avg_neg_logprobs = results['sent_level']['avg_neg_logprob']
+    all_max_neg_logprobs = results['sent_level']['max_neg_logprob']
+    all_min_neg_logprobs = results['sent_level']['min_neg_logprob']
 
-    neg_logprob_min = min(all_avg_neg_logprobs)
-    neg_logprob_max = max(all_avg_neg_logprobs)
+    neg_logprob_min = min(all_min_neg_logprobs)
+    neg_logprob_max = max(all_max_neg_logprobs)
 
     def normalize(value):
         return (value - neg_logprob_min) / (neg_logprob_max - neg_logprob_min)
@@ -194,6 +196,7 @@ def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) ->
     # Compute document-level average hallucination score
     doc_avg_hallucination_score = sum(normalized_avg_scores) / len(normalized_avg_scores)
 
+    # Return only the document-level average hallucination score
     return doc_avg_hallucination_score
 
 
