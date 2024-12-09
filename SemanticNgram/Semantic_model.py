@@ -124,7 +124,33 @@ class SemanticNgramModel(SemanticLanguageModel):
                 similar_ngs.add(similar_ng)
         return similar_ngs
 
-def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> float:
+def semantic_model_predict(passage: str, sampled_passages: List[str], n: int, word2vec_model_path: str = None) -> Dict[str, Dict[str, Union[List[float], float]]]:
+    """
+    Predict using either unigram or n-gram model based on the value of n
+    :param passage: The text passage to evaluate
+    :param sampled_passages: A list of sample passages for training
+    :param n: The n-gram size; 1 for unigram, >1 for n-gram
+    :param word2vec_model_path: Optional path to a pre-trained Word2Vec model
+    :return: Evaluation metrics for the passage
+    """
+    if n == 1:
+        model = SemanticUnigramModel(word2vec_model_path=word2vec_model_path)
+    else:
+        model = SemanticNgramModel(n=n, word2vec_model_path=word2vec_model_path)
+
+    # Add sampled passages and original passage to the model
+    for sample in sampled_passages + [passage]:
+        model.add(sample)
+
+    # Train the model
+    model.train()
+
+    # Evaluate the passage
+    sentences = [sent.text.strip() for sent in model.nlp(passage).sents]
+    results = model.evaluate(sentences)
+    return results
+
+'''def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> float:
     """
     Predicts a single normalized score (0 to 1) for a given passage compared to sampled passages.
 
@@ -164,6 +190,6 @@ def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) ->
     # Optionally include avg_max_neg_logprob in a weighted average for a composite score
     # normalized_score = (normalized_score + np.exp(-avg_max_neg_logprob)) / 2
 
-    return normalized_score
+    return normalized_score'''
 
 
