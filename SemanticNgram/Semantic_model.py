@@ -6,16 +6,6 @@ from scipy.spatial.distance import cosine
 import gensim.downloader as api  # Use Gensim's downloader
 
 
-import spacy
-import numpy as np
-from nltk.util import ngrams
-from typing import Dict, List, Set, Tuple, Union
-from scipy.spatial.distance import cosine
-import gensim.downloader as api
-from gensim.models import KeyedVectors
-import os
-
-
 class SemanticLanguageModel:
     word2vec = None  # Class-level attribute
 
@@ -26,27 +16,13 @@ class SemanticLanguageModel:
         self.lowercase = lowercase
         self.similarity_threshold = similarity_threshold
 
-        # Ensure the Word2Vec model is loaded
+        # Load the Word2Vec model only if it's not already loaded
         if SemanticLanguageModel.word2vec is None:
-            self._load_word2vec_from_cache()
+            print("Downloading Word2Vec model via Gensim...")
+            SemanticLanguageModel.word2vec = api.load("word2vec-google-news-300")
+            print("Word2Vec model loaded successfully.")
         self.word2vec = SemanticLanguageModel.word2vec
         self.token_vectors = {}
-
-    @staticmethod
-    def _load_word2vec_from_cache():
-        """Loads the Word2Vec model from the cache."""
-        model_name = "word2vec-google-news-300"
-        cache_path = os.path.expanduser(f"~/.gensim-data/{model_name}/{model_name}.gz")
-
-        if not os.path.exists(cache_path):
-            raise FileNotFoundError(
-                f"Word2Vec model not found in cache at {cache_path}. "
-                "Ensure the model is downloaded during package installation."
-            )
-
-        print(f"Loading Word2Vec model from cache: {cache_path}")
-        SemanticLanguageModel.word2vec = KeyedVectors.load_word2vec_format(cache_path, binary=True)
-        print("Word2Vec model loaded successfully.")
 
     def _get_vector(self, token: str) -> np.ndarray:
         if token not in self.token_vectors:
@@ -55,7 +31,6 @@ class SemanticLanguageModel:
             else:
                 self.token_vectors[token] = np.zeros(300)  # Default to zero vector
         return self.token_vectors[token]
-
 
 
 
