@@ -80,44 +80,53 @@ class SemanticLanguageModel:
             'doc_level': {'avg_neg_logprob': avg_neg_logprob_doc, 'avg_max_neg_logprob': avg_max_neg_logprob_doc},
         }
     def evaluate(self, sentences: List[str]) -> Dict[str, Dict[str, Union[List[float], float]]]:
-        raw_probabilities = []  # To store raw probabilities of tokens for normalization
         hallucination_scores = []  # To store sentence-level hallucination scores
 
         for sentence in sentences:
-            sentence_probs = []  # Probabilities for tokens in this sentence
+            sentence_probs = []  # Store probabilities for each token in the sentence
             tokens = [token.text for token in self.nlp(sentence)]
             if self.lowercase:
                 tokens = [token.lower() for token in tokens]
-
-            # Compute token probabilities
+        
             for token in tokens:
                 similar_tokens = self._get_similar_tokens(token)
                 prob = sum(self.probs.get(similar_token, 0) for similar_token in similar_tokens)
                 if prob == 0:
                     prob = self.probs['<unk>']
                 sentence_probs.append(prob)
-
-            # Average probability for the sentence
-            avg_probability = np.mean(sentence_probs)
-            hallucination_score = 1 - avg_probability  # Invert for hallucination
+        
+            # Ensure we handle the case where the sentence has no valid tokens
+            if sentence_probs:
+                max_prob = max(sentence_probs)
+                min_prob = min(sentence_probs)
+                avg_prob = np.mean(sentence_probs)
+            
+                # Normalize using min and max probabilities within the sentence
+                if max_prob > min_prob:
+                    normalized_avg_prob = (avg_prob - min_prob) / (max_prob - min_prob)
+                else:
+                    normalized_avg_prob = 1.0  # All probabilities are the same
+            
+                # Calculate the hallucination score (inverted normalized probability)
+                hallucination_score = 1 - normalized_avg_prob
+            else:
+                # If no probabilities exist, assign a default hallucination score
+                hallucination_score = 1.0  # Fully hallucinated as no meaningful tokens were found
 
             hallucination_scores.append(hallucination_score)
-            raw_probabilities.extend(sentence_probs)
 
-        # Normalize hallucination scores
-        min_score = min(hallucination_scores)
-        max_score = max(hallucination_scores)
-        normalized_hallucination_scores = [
-            (score - min_score) / (max_score - min_score) for score in hallucination_scores
-        ]
-
-        # Document-level hallucination score
-        doc_hallucination_score = np.mean(normalized_hallucination_scores)
+        # Document-level hallucination score (average of sentence-level scores)
+        doc_hallucination_score = np.mean(hallucination_scores) if hallucination_scores else 0
 
         return {
-            'sent_level': {'hallucination_scores': normalized_hallucination_scores},
-            'doc_level': {'hallucination_score': doc_hallucination_score},
+            'sent_level': {
+                'hallucination_scores': hallucination_scores,
+            },
+            'doc_level': {
+                'hallucination_score': doc_hallucination_score,
+            },
         }
+
 
     """def evaluate(self, sentences: List[str]) -> Dict[str, Dict[str, Union[List[float], float]]]:
         avg_neg_logprob = []
