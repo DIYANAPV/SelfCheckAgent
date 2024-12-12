@@ -54,81 +54,10 @@ class SemanticLanguageModel:
             prob_denom = self.token_count + k * len(self.counts)
             self.probs[item] = prob_nom / prob_denom
 
+    
+
+
     def evaluate(self, sentences: List[str]) -> Dict[str, Dict[str, Union[List[float], float]]]:
-        avg_neg_logprob = []
-        max_neg_logprob = []
-        logprob_doc = []
-        for sentence in sentences:
-            logprob_sent = []
-            tokens = [token.text for token in self.nlp(sentence)]
-            if self.lowercase:
-                tokens = [token.lower() for token in tokens]
-            for token in tokens:
-                similar_tokens = self._get_similar_tokens(token)
-                prob = sum(self.probs.get(similar_token, 0) for similar_token in similar_tokens)
-                if prob == 0:
-                    prob = self.probs['<unk>']
-                logprob = np.log(prob)
-                logprob_sent.append(logprob)
-                logprob_doc.append(logprob)
-            avg_neg_logprob.append(-1.0 * np.mean(logprob_sent))
-            max_neg_logprob.append(-1.0 * np.min(logprob_sent))
-        avg_neg_logprob_doc = -1.0 * np.mean(logprob_doc)
-        avg_max_neg_logprob_doc = np.mean(max_neg_logprob)
-        return {
-            'sent_level': {'avg_neg_logprob': avg_neg_logprob, 'max_neg_logprob': max_neg_logprob},
-            'doc_level': {'avg_neg_logprob': avg_neg_logprob_doc, 'avg_max_neg_logprob': avg_max_neg_logprob_doc},
-        }
-    def evaluate(self, sentences: List[str]) -> Dict[str, Dict[str, Union[List[float], float]]]:
-        hallucination_scores = []  # To store sentence-level hallucination scores
-
-        for sentence in sentences:
-            sentence_probs = []  # Store probabilities for each token in the sentence
-            tokens = [token.text for token in self.nlp(sentence)]
-            if self.lowercase:
-                tokens = [token.lower() for token in tokens]
-        
-            for token in tokens:
-                similar_tokens = self._get_similar_tokens(token)
-                prob = sum(self.probs.get(similar_token, 0) for similar_token in similar_tokens)
-                if prob == 0:
-                    prob = self.probs['<unk>']
-                sentence_probs.append(prob)
-        
-            # Ensure we handle the case where the sentence has no valid tokens
-            if sentence_probs:
-                max_prob = max(sentence_probs)
-                min_prob = min(sentence_probs)
-                avg_prob = np.mean(sentence_probs)
-            
-                # Normalize using min and max probabilities within the sentence
-                if max_prob > min_prob:
-                    normalized_avg_prob = (avg_prob - min_prob) / (max_prob - min_prob)
-                else:
-                    normalized_avg_prob = 1.0  # All probabilities are the same
-            
-                # Calculate the hallucination score (inverted normalized probability)
-                hallucination_score = 1 - normalized_avg_prob
-            else:
-                # If no probabilities exist, assign a default hallucination score
-                hallucination_score = 1.0  # Fully hallucinated as no meaningful tokens were found
-
-            hallucination_scores.append(hallucination_score)
-
-        # Document-level hallucination score (average of sentence-level scores)
-        doc_hallucination_score = np.mean(hallucination_scores) if hallucination_scores else 0
-
-        return {
-            'sent_level': {
-                'hallucination_scores': hallucination_scores,
-            },
-            'doc_level': {
-                'hallucination_score': doc_hallucination_score,
-            },
-        }
-
-
-    """def evaluate(self, sentences: List[str]) -> Dict[str, Dict[str, Union[List[float], float]]]:
         avg_neg_logprob = []
         max_neg_logprob = []
         min_neg_logprob = []  # Add this for minimum negative log probabilities
@@ -168,7 +97,7 @@ class SemanticLanguageModel:
                 'avg_max_neg_logprob': avg_max_neg_logprob_doc,
                 'avg_min_neg_logprob': avg_min_neg_logprob_doc,  # Include in results
             },
-        }"""
+        }
 
 
 
@@ -220,23 +149,9 @@ class SemanticNgramModel(SemanticLanguageModel):
                 similar_ngs.add(similar_ng)
         return similar_ngs
         
-def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> float:
-    if n == 1:
-        model = SemanticUnigramModel()
-    else:
-        model = SemanticNgramModel(n=n)
-    
-    for sample in sampled_passages + [passage]:
-        model.add(sample)
-    
-    model.train()
-    sentences = [sent.text.strip() for sent in model.nlp(passage).sents]
-    results = model.evaluate(sentences)
 
-    # Document-level hallucination score
-    return results['doc_level']['hallucination_score']
     
-"""def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> float:
+def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> float:
     if n == 1:
         model = SemanticUnigramModel()
     else:
@@ -271,7 +186,7 @@ def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) ->
 
 
 
-def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> Dict[str, Dict[str, Union[List[float], float]]]:
+"""def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) -> Dict[str, Dict[str, Union[List[float], float]]]:
     if n == 1:
         model = SemanticUnigramModel()
     else:
