@@ -29,6 +29,29 @@ from .Semantic_model import semantic_model_predict
 ##need to change read me
 
 
+SelfCheckAgent/
+│
+├── selfcheckagent/               
+│   ├── __init__.py                # Initialize the package
+|   ├── symbolic_agent.py
+|   ├── specialized_agent.py
+│   ├── contextual_agent.py        # Main class: Supports multiple models
+│   ├── models/                    # Subdirectory for different fine-tuned models
+│   │   ├── phi3_mnli/              # Folder for fine-tuned Phi-3 NLI model
+│   │   │   ├── config.json        # Model-specific config (optional)
+│   │   │   ├── tokenizer/         # Tokenizer files
+│   │   │   ├── pytorch_model.bin  # Model weights
+│   │   └── mistral_mnli/           # Another fine-tuned model folder
+│   │       ├── config.json
+│   │       ├── tokenizer/
+│   │       ├── pytorch_model.bin
+│
+├── example.ipynb                 # Example notebook for usage
+├── README.md                     # Documentation
+├── requirements.txt              # Dependencies
+└── setup.py                      # Packaging script
+
+
 ## Set Up OpenAI API Key
 
 Provide your OpenAI API key either directly or through environment variables:
