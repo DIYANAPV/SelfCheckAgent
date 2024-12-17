@@ -8,40 +8,49 @@ class PostInstallCommand(install):
         install.run(self)
         subprocess.call(['python', '-m', 'spacy', 'download', 'en_core_web_sm'])
 
-
-
 setup(
-    name="Semantic_Ngram",  # Name of your package
-    version="0.1",  # Initial version of your package
-    author="diyana",  # Author of the package
-    author_email="diyanapv@gmail.com",  # Author's email
-    description="A package for semantic n-gram models with Word2Vec",  # Short description of the package
-    long_description=open('README.md').read(),  # Detailed description (from README.md)
-    long_description_content_type='text/markdown',  # Markdown format for README
-    url="https://github.com/DIYANAPV/Semantic_Ngram.git",  # URL to your GitHub repository
-    packages=find_packages(),  # This will automatically find all sub-packages
+    name="selfcheckagent",  # Updated package name
+    version="0.1.1",  # Incremented version
+    author="Diyana",  # Author of the package
+    author_email="diyanapv@gmail.com",
+    description="A self-check agent for contextual and symbolic consistency.",
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
+    url="https://github.com/DIYANAPV/SelfCheckAgent",  # Updated repository URL
+
+    # Include selfcheckagent package and its modules
+    packages=find_packages(include=["selfcheckagent", "selfcheckagent.*"]),
+
     install_requires=[
         'spacy',
-        'gensim',
-        'nltk',
-        'scipy',
+        'torch',
+        'transformers',
+        'numpy',
+        'pandas',
         'tqdm',
-        'requests'
+        'scipy',
+        'nltk',
+        'gensim',
     ],
 
-    python_requires='>=3.6',  # Minimum Python version required
+    python_requires='>=3.6',  # Minimum Python version
+
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",  # You can change this to your license
+        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    include_package_data=True,  # Includes non-Python files specified in MANIFEST.in (if any)
-    entry_points={  # If you have CLI commands, define them here
+
+    include_package_data=True,  # Includes non-Python files if any
+
+    entry_points={
         'console_scripts': [
-            'semantic-ngram=SemanticNgram.main:main',  # Example command (adjust based on your entry point)
+            'contextual-agent=selfcheckagent.contextual_agent:main',  # Example CLI for contextual agent
+            'symbolic-agent=selfcheckagent.symbolic_agent:semantic_model_predict',  # Example CLI for symbolic model
         ],
     },
+
     cmdclass={
-        'install': PostInstallCommand,
+        'install': PostInstallCommand,  # Installs Spacy's model
     },
 )
