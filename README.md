@@ -1,20 +1,19 @@
-# Semantic_Ngram
+# SelfCheckAgent
 
-# Need to update the readme according to this 
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
 [![OpenAI API](https://img.shields.io/badge/OpenAI-GPT--4-blue)](https://platform.openai.com/)
 
-MC_NEST is a **Monte Carlo Tree Search** framework enhanced with **GPT-4** designed to tackle .........
+SelfCheckAgent is a tool to detect hallucination of LLM outputs with zero external resource, by leveraging consistency based approach.
 
 ## Installation
 
 To get started, clone the repository and install the dependencies:
 
 ```bash
-git clone https://github.com/corei5/MC_NEST_GPT.git
-cd MC_NEST_GPT
+git clone https://github.com/DIYANAPV/SelfCheckAgent.git
+cd SelfCheckAgent
 pip install -r requirements.txt
 ```
 
@@ -23,9 +22,12 @@ pip install -r requirements.txt
 Import the Package
 
 ```bash
-from MC_NEST_GPT.MC_NEST_GPT.MC_NEST_ import MC_NEST_gpt4o
-import openai
+from .Semantic_model import SemanticLanguageModel, SemanticUnigramModel, SemanticNgramModel
+from .Semantic_model import semantic_model_predict
 ```
+
+##need to change read me
+
 
 ## Set Up OpenAI API Key
 
