@@ -3,61 +3,66 @@ import numpy as np
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from typing import List
 
+
 class SelfCheckNLI:
     """
-    SelfCheckGPT (NLI variant): Supports multiple fine-tuned models for contextual consistency.
+    SelfCheckNLI: Supports multiple NLI models hosted on Hugging Face.
+    Allows dynamic switching between models like DeBERTa and LLaMA by specifying Hugging Face model names.
     """
-    def __init__(self, model_name: str = "phi3_nli", device: torch.device = None):
+
+    def __init__(self, model_name: str, device: str = None):
         """
-        Initialize the SelfCheckNLI with the selected fine-tuned model.
-        
-        :param model_name: Name of the fine-tuned model directory (e.g., 'phi3_nli' or 'other_model').
-        :param device: Device on which the model should run.
+        Initialize the SelfCheckNLI with a selected Hugging Face NLI model.
+
+        :param model_name: str -- Hugging Face model name (e.g., 'potsawee/deberta-v3-large-mnli').
+        :param device: str -- Device to load the model on ('cuda' or 'cpu').
         """
-        # Path to the model directory
-        model_path = f"./selfcheckagent/models/{model_name}"
-        
-        # Load tokenizer and model dynamically
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
+        self.model_name = model_name
+        self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+
+        # Load tokenizer and model from Hugging Face
+        print(f"Loading model '{model_name}' from Hugging Face...")
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForSequenceClassification.from_pretrained(
-            model_path, num_labels=3, ignore_mismatched_sizes=True
+            model_name, num_labels=3, ignore_mismatched_sizes=True
         )
+        self.model.to(self.device)
         self.model.eval()
 
-        # Select device (CPU or GPU)
-        if device is None:
-            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.device = device
-        self.model.to(device)
-
-        print(f"SelfCheck-NLI initialized with model: {model_name} on device: {device}")
+        print(f"SelfCheckNLI initialized with model '{model_name}' on device '{self.device}'.")
 
     @torch.no_grad()
     def predict(self, sentences: List[str], sampled_passages: List[str]):
         """
         Compare sentences against sampled passages using the loaded model.
-        
-        :param sentences: List of sentences to evaluate.
-        :param sampled_passages: List of sampled passages for comparison.
+
+        :param sentences: List[str] -- Sentences to evaluate.
+        :param sampled_passages: List[str] -- Passages for comparison.
         :return: Average contradiction scores per sentence and detailed scores.
         """
         num_sentences = len(sentences)
         num_samples = len(sampled_passages)
-
         scores = np.zeros((num_sentences, num_samples))
 
         for sent_i, sentence in enumerate(sentences):
             for sample_i, sample in enumerate(sampled_passages):
+                # Prepare input using tokenizer
                 inputs = self.tokenizer.encode_plus(
-                    sample, sentence, add_special_tokens=True, padding="max_length",
-                    truncation=True, max_length=2048, return_tensors="pt"
+                    sample, sentence,
+                    add_special_tokens=True,
+                    padding="max_length",
+                    truncation=True,
+                    max_length=512,
+                    return_tensors="pt"
                 )
                 inputs = {k: v.to(self.device) for k, v in inputs.items()}
 
+                # Get model predictions (logits)
                 logits = self.model(**inputs).logits
                 logits_entailment = logits[0][0].item()  # Entailment logit
                 logits_contradiction = logits[0][2].item()  # Contradiction logit
 
+                # Compute probability of contradiction
                 prob_contradiction = (
                     torch.exp(torch.tensor(logits_contradiction)) /
                     (torch.exp(torch.tensor(logits_contradiction)) + torch.exp(torch.tensor(logits_entailment)))
@@ -67,5 +72,3 @@ class SelfCheckNLI:
 
         scores_per_sentence = scores.mean(axis=-1)
         return scores_per_sentence, scores
-
-
