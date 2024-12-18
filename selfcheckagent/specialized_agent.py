@@ -7,18 +7,30 @@ from typing import List
 class SelfCheckNLI:
     """
     SelfCheckNLI: Supports multiple NLI models hosted on Hugging Face.
-    Allows dynamic switching between models like DeBERTa and LLaMA by specifying Hugging Face model names.
+    Allows dynamic switching between models and customization of input settings.
     """
 
-    def __init__(self, model_name: str, device: str = None):
+    # Predefined model options
+    MODEL_OPTIONS = [
+        "diyanamuhammed/mistral-mnli",
+        "diyanamuhammed/gemma-mnli",
+        "diyanamuhammed/Phi-3-MNLI"
+    ]
+
+    def __init__(self, model_name: str = "diyanamuhammed/Phi-3-MNLI", device: str = None, max_length: int = 512):
         """
         Initialize the SelfCheckNLI with a selected Hugging Face NLI model.
 
-        :param model_name: str -- Hugging Face model name (e.g., 'potsawee/deberta-v3-large-mnli').
+        :param model_name: str -- Hugging Face model name (default: 'diyanamuhammed/Phi-3-MNLI').
         :param device: str -- Device to load the model on ('cuda' or 'cpu').
+        :param max_length: int -- Maximum sequence length for tokenization (default: 512).
         """
+        if model_name not in self.MODEL_OPTIONS:
+            raise ValueError(f"Invalid model name '{model_name}'. Choose from {self.MODEL_OPTIONS}.")
+
         self.model_name = model_name
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+        self.max_length = max_length
 
         # Load tokenizer and model from Hugging Face
         print(f"Loading model '{model_name}' from Hugging Face...")
@@ -52,7 +64,7 @@ class SelfCheckNLI:
                     add_special_tokens=True,
                     padding="max_length",
                     truncation=True,
-                    max_length=512,
+                    max_length=self.max_length,
                     return_tensors="pt"
                 )
                 inputs = {k: v.to(self.device) for k, v in inputs.items()}
