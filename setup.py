@@ -4,16 +4,11 @@ import subprocess
 
 
 class PostInstallCommand(install):
-    """Post-installation command for downloading Spacy model and ensuring Hugging Face dependencies."""
+    """Post-installation command for downloading SpaCy model and ensuring Hugging Face dependencies."""
     def run(self):
         install.run(self)
         print("Downloading SpaCy model: en_core_web_sm...")
         subprocess.call(['python', '-m', 'spacy', 'download', 'en_core_web_sm'])
-
-        print("Downloading Hugging Face model dependencies...")
-        # Ensure models required for contextual and specialized agents are cached
-        subprocess.call(['python', '-m', 'transformers', 'download', 'potsawee/deberta-v3-large-mnli'])  #need to change atlast 
-        subprocess.call(['python', '-m', 'transformers', 'download', 'meta-llama/Llama-3.3-70B-Instruct'])
 
 
 setup(
@@ -22,7 +17,7 @@ setup(
     author="Diyana",  # Package author
     author_email="diyanapv@gmail.com",
     description="A self-check agent for contextual, specialized, and symbolic consistency.",
-    long_description=open('README.md').read(),
+    long_description=open('README.md', encoding="utf-8").read(),
     long_description_content_type='text/markdown',
     url="https://github.com/DIYANAPV/SelfCheckAgent",  # Repository URL
 
@@ -41,7 +36,7 @@ setup(
         'gensim',
     ],
 
-    python_requires='>=3.8',  # Updated minimum Python version
+    python_requires='>=3.8',  # Minimum Python version
 
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -63,3 +58,4 @@ setup(
         'install': PostInstallCommand,  # Custom post-installation script
     },
 )
+
