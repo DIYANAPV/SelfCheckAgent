@@ -17,6 +17,47 @@ class SelfCheckNLI:
         "diyanamuhammed/Phi-3-MNLI"
     ]
 
+    def __init__(self, model_name: str = "diyanamuhammed/Phi-3-MNLI", device: str = None, max_length: int = 512, token: str = None):
+        """
+        Initialize the SelfCheckNLI with a selected Hugging Face NLI model.
+
+        :param model_name: str -- Hugging Face model name (default: 'diyanamuhammed/Phi-3-MNLI').
+        :param device: str -- Device to load the model on ('cuda' or 'cpu').
+        :param max_length: int -- Maximum sequence length for tokenization (default: 512).
+        :param token: str -- Hugging Face token for private models (default: None).
+        """
+        if model_name not in self.MODEL_OPTIONS:
+            raise ValueError(f"Invalid model name '{model_name}'. Choose from {self.MODEL_OPTIONS}.")
+
+        self.model_name = model_name
+        self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+        self.max_length = max_length
+        self.token = token
+
+        # Load tokenizer and model from Hugging Face
+        print(f"Loading model '{model_name}' from Hugging Face...")
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name, use_auth_token=self.token)
+        self.model = AutoModelForSequenceClassification.from_pretrained(
+            model_name, num_labels=3, ignore_mismatched_sizes=True, use_auth_token=self.token
+        )
+        self.model.to(self.device)
+        self.model.eval()
+
+        print(f"SelfCheckNLI initialized with model '{model_name}' on device '{self.device}'.")
+
+'''class SelfCheckNLI:
+    """
+    SelfCheckNLI: Supports multiple NLI models hosted on Hugging Face.
+    Allows dynamic switching between models and customization of input settings.
+    """
+
+    # Predefined model options
+    MODEL_OPTIONS = [
+        "diyanamuhammed/mistral-mnli",
+        "diyanamuhammed/gemma-mnli",
+        "diyanamuhammed/Phi-3-MNLI"
+    ]
+
     def __init__(self, model_name: str = "diyanamuhammed/Phi-3-MNLI", device: str = None, max_length: int = 512):
         """
         Initialize the SelfCheckNLI with a selected Hugging Face NLI model.
@@ -41,7 +82,7 @@ class SelfCheckNLI:
         self.model.to(self.device)
         self.model.eval()
 
-        print(f"SelfCheckNLI initialized with model '{model_name}' on device '{self.device}'.")
+        print(f"SelfCheckNLI initialized with model '{model_name}' on device '{self.device}'.")'''
 
     @torch.no_grad()
     def predict(self, sentences: List[str], sampled_passages: List[str]):
