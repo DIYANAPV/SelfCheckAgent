@@ -16,7 +16,8 @@ class SelfCheckNLI:
     MODEL_OPTIONS = [
         "diyanamuhammed/mistral-mnli",
         "diyanamuhammed/gemma-mnli",
-        "diyanamuhammed/Phi-3-MNLI"
+        "diyanamuhammed/Phi-3-MNLI",
+        "diyanamuhammed/llama-mnli"
     ]
 
     def __init__(self, model_name: str = "diyanamuhammed/Phi-3-MNLI", device: str = None, max_length: int = 512):
