@@ -86,4 +86,4 @@ class SelfCheckNLI:
                 scores[sent_i, sample_i] = prob_contradiction
 
         scores_per_sentence = scores.mean(axis=-1)
-        return scores_per_sentence, scores
+        return scores_per_sentence
