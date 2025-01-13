@@ -14,17 +14,17 @@ class SelfCheckNLI:
 
     # Predefined model options
     MODEL_OPTIONS = [
-        "diyanamuhammed/mistral-mnli",
-        "diyanamuhammed/gemma-mnli",
-        "diyanamuhammed/Phi-3-MNLI",
-        "diyanamuhammed/llama-mnli"
+        "hiddennode/mistral-mnli",
+        "hiddennode/llama-mnli",
+        "hiddennode/gemma-mnli",
+        "hiddennode/Phi-3-MNLI"
     ]
 
-    def __init__(self, model_name: str = "diyanamuhammed/Phi-3-MNLI", device: str = None, max_length: int = 512):
+    def __init__(self, model_name: str = "hiddennode/Phi-3-MNLI", device: str = None, max_length: int = 512):
         """
         Initialize the SelfCheckNLI with a selected Hugging Face NLI model.
 
-        :param model_name: str -- Hugging Face model name (default: 'diyanamuhammed/Phi-3-MNLI').
+        :param model_name: str -- Hugging Face model name (default: 'hiddennode/Phi-3-MNLI').
         :param device: str -- Device to load the model on ('cuda' or 'cpu').
         :param max_length: int -- Maximum sequence length for tokenization (default: 512).
         """
