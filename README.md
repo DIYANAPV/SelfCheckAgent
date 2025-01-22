@@ -35,7 +35,8 @@ SelfCheckAgent/
 
 
 If you use OpenAI's GPT models (e.g., GPT-4), set your API key:
-```bash
+
+
 import openai
 openai.api_key = "your_openai_api_key"
 ```
