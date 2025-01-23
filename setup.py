@@ -14,12 +14,12 @@ class PostInstallCommand(install):
 setup(
     name="selfcheckagent",  # Package name
     version="0.1.2",  # Updated version
-    author="Diyana",  # Package author
-    author_email="diyanapv@gmail.com",
+    author="hiddennode",  # Package author
+    author_email="hiddennode@gmail.com",
     description="A self-check agent for contextual, specialized, and symbolic consistency.",
     long_description=open('README.md', encoding="utf-8").read(),
     long_description_content_type='text/markdown',
-    url="https://github.com/DIYANAPV/SelfCheckAgent",  # Repository URL
+    url="-",  # Repository URL
 
     # Packages included
     packages=find_packages(include=["selfcheckagent", "selfcheckagent.*"]),
