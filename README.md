@@ -20,7 +20,7 @@ SelfCheckAgent/
 |   ├── symbolic_agent.py
 |   ├── specialized_agent.py
 │   ├── contextual_agent.py        
-├── example.ipynb                 # Example notebook for usage
+├── usage.ipynb                 # Example notebook for usage
 ├── README.md                     # Documentation
 ├── requirements.txt              # Dependencies
 └── setup.py                      # Packaging script
