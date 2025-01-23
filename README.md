@@ -46,32 +46,3 @@ openai.api_key = "your_openai_api_key"
 ```
 
 
-## Contributing
-Contributions are welcome! Please fork the repository and submit a pull request for major changes.
-
-## License
-
-This project is licensed under the MIT License.
-
-## 📄 Citation
-
-```bash
-
-@article{rabby2024mc,
-  title={-},
-  author={Rabby, Gollam and Keya, Farhana and Zamil, Parvez and Auer, S{\"o}ren},
-  journal={-},
-  year={2024}
-}
-
-```
-
-## References
-
-
-
-
-
-
-
-Happy coding! 🚀
