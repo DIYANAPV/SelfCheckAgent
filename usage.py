@@ -1,9 +1,6 @@
 
 #Specialized Detection Agent
 
-
-#users can change 
-
 '''
 Model
 Switch between different models using the model_name parameter:
