@@ -3,7 +3,7 @@
 # __init__.py
 
 from .Semantic_Agent import SemanticLanguageModel, SemanticUnigramModel, SemanticNgramModel
-from .specialized_agent import SelfCheckNLI
+from .Specialized_Detection_Agent import SelfCheckNLI
 from .contextual_agent import ContextualAgent
 
 __all__ = [
