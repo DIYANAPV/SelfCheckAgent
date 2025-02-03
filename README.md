@@ -35,7 +35,6 @@ openai.api_key = "your_openai_api_key"
 
 
 
-```
 
 ### Experimental Results
 Results on the **wiki_bio_gpt3_hallucination** dataset.
