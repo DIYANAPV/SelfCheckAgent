@@ -12,10 +12,14 @@ SelfCheckAgent is a tool to detect hallucination of LLM outputs with zero extern
 ## Installation
 
 To get started, clone the repository and install the dependencies:
-
+```
 git clone https://github.com/DIYANAPV/SelfCheckAgent.git
+
 cd SelfCheckAgent
+
 !pip install -r requirements.txt
+```
+
 
 ```plaintext
 SelfCheckAgent/
