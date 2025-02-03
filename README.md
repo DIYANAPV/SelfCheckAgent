@@ -7,9 +7,12 @@
 
 SelfCheckAgent is a tool to detect hallucination of LLM outputs with zero external resource, by leveraging consistency based approach.
 
+
+
 ## Installation
 
 To get started, clone the repository and install the dependencies:
+git clone https://github.com/DIYANAPV/SelfCheckAgent.git
 
 
 ```plaintext
