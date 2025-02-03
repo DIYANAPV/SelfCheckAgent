@@ -198,5 +198,5 @@ def semantic_model_predict(passage: str, sampled_passages: List[str], n: int) ->
     model.train()
     sentences = [sent.text.strip() for sent in model.nlp(passage).sents]
     results = model.evaluate(sentences)
-    return results
+    return results"""
 
