@@ -4,7 +4,7 @@
 
 from .Semantic_Agent import SemanticLanguageModel, SemanticUnigramModel, SemanticNgramModel
 from .Specialized_Detection_Agent import SelfCheckNLI
-from .contextual_agent import ContextualAgent
+from .Contextual_Consistency_Agent import ContextualAgent
 
 __all__ = [
     "SemanticLanguageModel",
