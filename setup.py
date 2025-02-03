@@ -46,13 +46,15 @@ setup(
 
     include_package_data=True,
 
+
     entry_points={
-        'console_scripts': [
-            'contextual-agent=selfcheckagent.contextual_agent:main',  # CLI for ContextualAgent
-            'nli-agent=selfcheckagent.specialized_agent:main',        # CLI for SelfCheckNLI
-            'symbolic-agent=selfcheckagent.symbolic_agent:main',      # CLI for Symbolic Model
-        ],
-    },
+    'console_scripts': [
+        'contextual-agent=selfcheckagent.Contextual_Consistency_Agent:main',  # CLI for ContextualAgent
+        'nli-agent=selfcheckagent.Specialized_Detection_Agent:main',          # CLI for SelfCheckNLI
+        'semantic-agent=selfcheckagent.Semantic_Agent:main',                  # CLI for Semantic Model
+    ],
+},
+
 
     cmdclass={
         'install': PostInstallCommand,  # Custom post-installation script
