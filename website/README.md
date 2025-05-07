@@ -1,1 +1,0 @@
-# SCI-IDEA
