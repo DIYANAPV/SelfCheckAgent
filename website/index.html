@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <!-- Meta tags for social media banners, these should be filled in appropriatly as they are your "business card" -->
+  <!-- Replace the content tag with appropriate information -->
+  <meta name="description" content="SCI-IDEA." />
+  <meta property="og:title" content="SCI-IDEA: Context-Aware Scientific Ideation Using Token and Sentence Embeddings" />
+  <meta property="og:description" content="Context-Aware Scientific Ideation Using Token and Sentence Embeddings." />
+  <meta property="og:url" content="" />
+  <meta property="og:image" content="static/images/alex1.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  
+  <meta name="twitter:title" content="SCI-IDEA: Context-Aware Scientific Ideation Using Token and Sentence Embeddings" />
+  <meta name="twitter:description" content="Explore how SCI-IDEA is tackling scientific idea generation task." />
+  <meta name="twitter:image" content="static/images/alex.png" />
+  <meta name="twitter:card" content="tackling scientific idea generation" />
+  <meta name="twitter:site" content="@TIB" />
+  
+  <meta name="keywords" content="Scientific Idea Generation, Aha Moment Detection, Context-aware Response, Large Language Models, AI Research Assistant" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <title>SCI-IDEA: Context-Aware Scientific Ideation Using Token and Sentence Embeddings</title>
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.png">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+  rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script src="static/js/bulma-carousel.min.js"></script>
+  <script src="static/js/bulma-slider.min.js"></script>
+  <script src="static/js/index.js"></script>
+</head>
+<body>
+
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">SCI-IDEA: Context-Aware Scientific Ideation Using Token and Sentence Embeddings</h1>
+            <div class="is-size-5 publication-authors">
+              <!-- Paper authors -->
+              <span class="author-block">
+                <a href="https://scholar.google.de/citations?hl=de&user=EvrlaSAfAAAAJ" target="_blank">Farhana Keya</a><sup>1◦</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://scholar.google.de/citations?hl=de&user=ulEYL1QAAAAJ" target="_blank">Gollam Rabby</a><sup>2◦</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://scholar.google.de/citations?hl=de&user=0kK7sSAAAAAfJ" target="_blank">Prasenjit Mitra</a><sup>1</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://sleeping4cat.github.io/sleepingcat/f" target="_blank">Sahar Vahdati</a><sup>1</sup>,
+              </span>
+             
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?hl=en&user=2cpal78AAAAJ" target="_blank">Sören Auer</a><sup>1,2</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?hl=en&user=p1FuAMkAAAAJf" target="_blank">Yaser Jaradeh</a><sup>2</sup>,
+              </span>
+
+              
+              
+                  </div>
+
+                  <div class="is-size-5 publication-authors">
+                    <span class="author-block">
+                      TIB—Leibniz Information Centre for Science and Technology, Hannover, Germany<sup>1</sup>,
+                      L3S Research Center, Leibniz University Hannover, Hannover, Germany <sup>2</sup> 
+                    </span>                    
+<!--                       <span class="eql-cntrb">
+                        <small><br>
+                          <sup>◦</sup> Equal Lead &nbsp;  
+                          <sup>⋄</sup> Equal Core Contribution &nbsp;  
+                          <sup>†</sup> Equal Supervision
+                        </small>
+                      </span> -->
+                      
+                  </div>
+
+                  <div class="column has-text-centered">
+                    <div class="publication-links">
+                         <!-- dataset -->
+                         <span class="link-block">
+                          <a href="https://huggingface.co/datasets/laion/project-alexandria" target="_blank"
+                             class="external-link button is-normal is-rounded is-dark">
+                            <span class="icon">
+                              <img src="static/images/data.png" alt="KU Dataset Icon" width="20" height="20">
+                            </span>
+                            <span>Dataset</span>
+                          </a>
+                        </span>
+
+                  <!-- Github link -->
+                  <span class="link-block">
+                    <a href="https://github.com/LAION-AI/project-alexandria" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+
+                <!-- ArXiv abstract Link -->
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2502.19413" target="_blank"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--
+Teaser video section commented out
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video poster="" id="tree" autoplay controls muted loop height="100%">
+        <source src="static/videos/banner_video.mp4" type="video/mp4">
+      </video>
+      <h2 class="subtitle has-text-centered">
+        Aliquam vitae elit ullamcorper tellus egestas pellentesque. Ut lacus tellus, maximus vel lectus at, placerat pretium mi. Maecenas dignissim tincidunt vestibulum. Sed consequat hendrerit nisl ut maximus. 
+      </h2>
+    </div>
+  </div>
+</section>
+-->
+
+
+
+<!-- Paper abstract -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Every scientific discovery starts with an idea inspired by prior work, interdisciplinary concepts, and emerging challenges. Recent advancements in large language models (LLMs) trained on scientific corpora have driven interest in AI-supported idea generation. However, generating context-aware, high-quality, and innovative ideas remains challenging. We introduce SCI-IDEA, a framework that uses LLM prompting strategies and “Aha Moment” detection for iterative idea refinement. SCI-IDEA extracts essential facets from research publications, assessing generated ideas on novelty, excitement, feasibility, and effectiveness. Comprehensive experiments validate SCI-IDEA’s effectiveness, achieving average scores of 6.84, 6.86, 6.89, and 6.84 (on a 1–10 scale) across novelty, excitement, feasibility, and effectiveness, respectively. Evaluations employed GPT-4o, GPT-4.5, DeepSeek-32B (each under few-shot 2 prompting), and DeepSeek-70B (3-shot prompting), with token-level embeddings used for Aha Moment detection. Similarly, it achieves scores of 6.87, 6.86, 6.83, and 6.87 using GPT-4o under few-shot 5 prompting, GPT-4.5 under few-shot 3 prompting, DeepSeek-32B under zero-shot chain-of-thought prompting, and DeepSeek-70B under few-shot 5 prompting with sentence-level embeddings. We also address ethical considerations such as intellectual credit, potential misuse, and balancing human creativity with AI-driven ideation. Our results highlight SCI-IDEA's potential to facilitate the structured and flexible exploration of context-aware scientific ideas, supporting innovation while maintaining ethical standards.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End paper abstract -->
+
+ 
+  <section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <img src="static/images/user_interaction.png" alt="User Interaction" style="width: 100%; height: auto;">
+      <h2 class="subtitle has-text-centered">
+        Overview of researcher and SCI-IDEA interactions.
+      </h2>
+    </div>
+  </div>
+</section>
+
+    
+
+
+
+
+<!--BibTex citation -->
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>
+@article{schuhmann2025projectalexandria,
+      title={SCI-IDEA: Context-Aware Scientific Ideation Using Token and Sentence Embeddings}, 
+      author={.....},
+      journal={arXiv preprint arXiv:2502.hf19413},
+      year={2025}
+}
+    </code></pre>
+  </div>
+</section>
+<!--End BibTex citation -->
+
+
+  <footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+
+          <p>
+            Citing <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">eliahuhorwitz</a> for open-sourcing this template.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Statcounter tracking code -->
+  
+<!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
+
+    <!-- End of Statcounter Code -->
+
+  </body>
+  </html>
